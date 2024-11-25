@@ -71,19 +71,19 @@ play_turns_with_decisions <- function(manos, comunitarias, strategies, player_st
       # Registrar acción en player_stats
       if (decision == "Retirarse") {
         activos[i] <- FALSE
-        player_stats$Retiros[i] <- player_stats$Retiros[i] + 1
+        player_stats$Retiros[i] <<- player_stats$Retiros[i] + 1
       } else if (decision == "Apostar") {
-        player_stats$Apuestas[i] <- player_stats$Apuestas[i] + 1
+        player_stats$Apuestas[i] <<- player_stats$Apuestas[i] + 1
       } else if (decision == "Igualar") {
-        player_stats$Igualaciones[i] <- player_stats$Igualaciones[i] + 1
+        player_stats$Igualaciones[i] <<- player_stats$Igualaciones[i] + 1
       }
       return(decision)
     })
     decisiones[[turno]] <- turno_decisiones
     
     # Validación de conteos
-    #cat(cyan("\nEstadísticas actualizadas en el turno:", turno, "\n"))
-    #print(player_stats)
+    cat(cyan("\nEstadísticas actualizadas en el turno:", turno, "\n"))
+    print(player_stats)
     
     # Si queda un solo jugador activo, termina la partida
     if (sum(activos) == 1) {
