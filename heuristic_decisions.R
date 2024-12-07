@@ -33,16 +33,16 @@ evaluate_hand <- function(mano, comunitarias) {
 decision_strategy <- function(strategy, hand_rank, turn, decisions_so_far) {
   decision_count <- sum(decisions_so_far == "Apostar" | decisions_so_far == "Igualar")
   if (strategy == "agresiva") {
-    if (hand_rank >= 6 || decision_count >= turn) return("Apostar")
-    else if (hand_rank >= 4) return("Igualar")
+    if (hand_rank >= 2 || decision_count >= turn) return("Apostar")
+    else if (hand_rank >= 1) return("Igualar")
     else return("Retirarse")
   } else if (strategy == "conservadora") {
-    if (hand_rank >= 8) return("Apostar")
-    else if (hand_rank >= 5 && decision_count < 2) return("Igualar")
+    if (hand_rank >= 4) return("Apostar")
+    else if (hand_rank >= 2 && decision_count < 2) return("Igualar")
     else return("Retirarse")
   } else if (strategy == "mixta") {
-    if (hand_rank >= 7 || (decision_count == 0 && turn == 1)) return("Apostar")
-    else if (hand_rank >= 4) return("Igualar")
+    if (hand_rank >= 3 || (decision_count == 0 && turn == 1)) return("Apostar")
+    else if (hand_rank >= 2) return("Igualar")
     else return("Retirarse")
   }
 }
@@ -54,7 +54,7 @@ play_turns_with_decisions <- function(manos, comunitarias, strategies, player_st
   decisiones <- list()
   activos <- rep(TRUE, nrow(player_stats))
   decisions_so_far <- vector("list", nrow(player_stats))
-  
+
   for (turno_idx in seq_along(turnos)) {
     turno <- names(turnos)[turno_idx]
     cartas_reveladas <- turnos[[turno]]
@@ -81,12 +81,9 @@ play_turns_with_decisions <- function(manos, comunitarias, strategies, player_st
     })
     decisiones[[turno]] <- turno_decisiones
     
-    # Validación de conteos
-    cat(cyan("\nEstadísticas actualizadas en el turno:", turno, "\n"))
-    print(player_stats)
-    
     # Si queda un solo jugador activo, termina la partida
     if (sum(activos) == 1) {
+      print(player_stats)
       ganador <- which(activos)
       return(list(ganador = ganador, decisiones = decisiones, player_stats = player_stats))
     }

@@ -37,7 +37,10 @@ determine_winner <- function(manos, comunitarias) {
   
   if (length(posibles_ganadores) == 1) {
     ganador <- posibles_ganadores
+    mano_ganadora <- manos[[ganador]]  # Mano del ganador
+    jugada_ganadora <- evaluaciones[ganador]  # Jugada del ganador
   } else {
+    # Empate: resolverlo basado en el puntaje más alto de las cartas
     manos_combinadas <- lapply(posibles_ganadores, function(i) {
       rbind(manos[[i]], comunitarias)
     })
@@ -45,17 +48,25 @@ determine_winner <- function(manos, comunitarias) {
       max(match(cartas$Valor, c("2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A")))
     })
     ganador <- posibles_ganadores[which.max(puntajes)]
+    mano_ganadora <- list(manos[[ganador]])  # Mano del ganador después del desempate
+    jugada_ganadora <- evaluaciones[ganador]  # Jugada del ganador después del desempate
   }
   
-  return(list(ganador = ganador, evaluaciones = evaluaciones))
+  return(list(
+    ganador = ganador, 
+    evaluaciones = evaluaciones, 
+    mano_ganadora = mano_ganadora, 
+    jugada_ganadora = jugada_ganadora
+  ))
 }
+
 
 # ---------------------------
 # Simulación de Texas Hold'em con métricas de acciones
 simulate_texas_holdem <- function(n_jugadores, strategies) {
   mazo <- generate_deck()
   juego <- deal_cards(mazo, n_jugadores)
-  source("C:/Users/Dilan/Documents/simulacion/texas/heuristic_decisions.R")
+  source("C:/Users/Dilan/Documents/simulacion/texas_simulacion_R/heuristic_decisions.R")
   
   # Inicializar estadísticas de jugadores como data.frame
   player_stats <- data.frame(
